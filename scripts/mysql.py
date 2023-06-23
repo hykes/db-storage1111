@@ -2,12 +2,13 @@ import pymysql
 
 
 class Mysql(object):
-    def __init__(self):
+    def __init__(self, db_host, db_port, db_user, db_password, db_database):
         self._connect = pymysql.connect(
-            host='127.0.0.1',
-            user='test',
-            password='######',
-            database='test',
+            host=db_host,
+            port=db_port,
+            user=db_user,
+            password=db_password,
+            database=db_database,
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -29,7 +30,17 @@ class Mysql(object):
         else:
             # self.db_close()
             return self._cursor.lastrowid
-
+    
+    def get_mysql_data(self, data):
+        fields = ""
+        insert_data = ""
+        for k, v in data.items():
+            fields = fields + k + ','
+            insert_data = insert_data + "'" + str(v) + "'" + ','
+        fields = fields.strip(',')
+        insert_data = insert_data.strip(',')
+        return [fields, insert_data]
+    
     def update_db(self, table_name, update_data, wheres=None):
         try:
             if wheres is not None:
@@ -86,16 +97,6 @@ class Mysql(object):
         else:
             # self.db_close()
             return result
-
-    def get_mysql_data(self, data):
-        fields = ""
-        insert_data = ""
-        for k, v in data.items():
-            fields = fields + k + ','
-            insert_data = insert_data + "'" + str(v) + "'" + ','
-        fields = fields.strip(',')
-        insert_data = insert_data.strip(',')
-        return [fields, insert_data]
 
     def db_close(self):
         self._cursor.close()
