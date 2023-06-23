@@ -25,7 +25,7 @@ class Mysql(object):
         except Exception as e:
             self._connect.rollback()  # 如果这里是执行的执行存储过程的sql命令，那么可能会存在rollback的情况，所以这里应该考虑到
             print("数据插入失败，失败原因:", e)
-            print(insert_data)
+            # print(insert_data)
         else:
             # self.db_close()
             return self._cursor.lastrowid
