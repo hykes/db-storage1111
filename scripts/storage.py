@@ -5,7 +5,7 @@ import re
 import modules.scripts as scripts
 import gradio as gr
 
-from mysql import Mysql 
+from scripts.db.mysql import Mysql 
 
 db_host = os.environ.get('DB_HOST', 'localhost')
 db_port = int(os.environ.get('DB_PORT', 3306))
