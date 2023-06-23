@@ -5,7 +5,7 @@ import re
 import modules.scripts as scripts
 import gradio as gr
 
-from mysql import Mysql
+from db.mysql import Mysql
 
 db_host = os.environ.get('DB_HOST', 'localhost')
 db_port = int(os.environ.get('DB_PORT', 3306))
@@ -22,11 +22,10 @@ class Scripts(scripts.Script):
 
     def ui(self, is_img2img):
         checkbox_save_to_db = gr.inputs.Checkbox(label="Save to DB", default=False)
-        database_name = gr.inputs.Textbox(label="Database Name", default="StableDiffusion")
         table_name = gr.inputs.Textbox(label="Collection Name", default="Automatic1111")
-        return [checkbox_save_to_db, database_name, table_name]
+        return [checkbox_save_to_db, table_name]
 
-    def postprocess(self, p, processed, checkbox_save_to_db, database_name, table_name):
+    def postprocess(self, p, processed, checkbox_save_to_db, table_name):
         sql = Mysql(db_host, db_port, db_user, db_password, db_database) if checkbox_save_to_db else None
         if sql is None:
             return True
