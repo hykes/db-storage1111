@@ -21,8 +21,10 @@ class Scripts(scripts.Script):
         return scripts.AlwaysVisible
 
     def ui(self, is_img2img):
-        checkbox_save_to_db = gr.inputs.Checkbox(label="Save to DB", default=False)
-        table_name = gr.inputs.Textbox(label="Table Name", default="generated_images")
+        # 折叠的文本框
+        with gr.Accordion("Mysql Storage", open=False):
+            checkbox_save_to_db = gr.inputs.Checkbox(label="Save to Mysql", default=False)
+            table_name = gr.inputs.Textbox(label="Table Name", default="generated_images")
         return [checkbox_save_to_db, table_name]
 
     def postprocess(self, p, processed, checkbox_save_to_db, table_name):
@@ -66,7 +68,7 @@ class Scripts(scripts.Script):
                 "size": size, 
                 "model_hash": model_hash, 
                 "model": model, 
-                "image": image_base64_str
+                "image_base64": image_base64_str
             })
             print("inset_db end ..")
         return True
