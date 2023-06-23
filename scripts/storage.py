@@ -37,7 +37,8 @@ class Scripts(scripts.Script):
         # collection = get_collection(database_name, collection_name) if checkbox_save_to_db else None
         # if collection is None:
         #     return True
-        
+    
+        print("test hykes")
         for i in range(len(processed.images)):
 
             # Extract image information
