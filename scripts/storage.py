@@ -52,7 +52,8 @@ class Scripts(scripts.Script):
             buffer = BytesIO()
             image.save(buffer, "png")
             image_bytes = buffer.getvalue()
-            base64 = base64.b64encode(image_bytes).decode('utf-8')
+            image_base64 = base64.b64encode(image_bytes)
+            image_base64_str = image_base64.decode('utf-8')
 
             print("inset_db ..")
             sql.inset_db(table_name, {
@@ -65,7 +66,7 @@ class Scripts(scripts.Script):
                 "size": size, 
                 "model_hash": model_hash, 
                 "model": model, 
-                "image": base64
+                "image": image_base64_str
             })
             print("inset_db end ..")
         return True
