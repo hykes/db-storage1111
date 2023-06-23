@@ -33,10 +33,10 @@ class Scripts(scripts.Script):
         collection_name = gr.inputs.Textbox(label="Collection Name", default="Automatic1111")
         return [checkbox_save_to_db, database_name, collection_name]
 
-    def postprocess(self, p, processed,checkbox_save_to_db,database_name,collection_name):
-        collection = get_collection(database_name, collection_name) if checkbox_save_to_db else None
-        if collection is None:
-            return True
+    def postprocess(self, p, processed, checkbox_save_to_db, database_name, collection_name):
+        # collection = get_collection(database_name, collection_name) if checkbox_save_to_db else None
+        # if collection is None:
+        #     return True
         
         for i in range(len(processed.images)):
 
@@ -60,7 +60,7 @@ class Scripts(scripts.Script):
             image.save(buffer, "png")
             image_bytes = buffer.getvalue()
 
-            collection.insert_one({
+            print({
                 "prompt": prompt, 
                 "negative_prompt": neg_prompt, 
                 "steps": int(steps), 
@@ -72,4 +72,16 @@ class Scripts(scripts.Script):
                 "model": model, 
                 "image": image_bytes
             })
+            # collection.insert_one({
+            #     "prompt": prompt, 
+            #     "negative_prompt": neg_prompt, 
+            #     "steps": int(steps), 
+            #     "seed": int(seed), 
+            #     "sampler": sampler,
+            #     "cfg_scale": float(cfg_scale), 
+            #     "size": size, 
+            #     "model_hash": model_hash, 
+            #     "model": model, 
+            #     "image": image_bytes
+            # })
         return True
