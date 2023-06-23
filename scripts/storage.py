@@ -5,7 +5,7 @@ import re
 import modules.scripts as scripts
 import gradio as gr
 
-from scripts.lib.mysql import Mysql
+from mysql import Mysql 
 
 db_host = os.environ.get('DB_HOST', 'localhost')
 db_port = int(os.environ.get('DB_PORT', 3306))
@@ -22,7 +22,7 @@ class Scripts(scripts.Script):
 
     def ui(self, is_img2img):
         checkbox_save_to_db = gr.inputs.Checkbox(label="Save to DB", default=False)
-        table_name = gr.inputs.Textbox(label="Collection Name", default="Automatic1111")
+        table_name = gr.inputs.Textbox(label="Table Name", default="generated_images")
         return [checkbox_save_to_db, table_name]
 
     def postprocess(self, p, processed, checkbox_save_to_db, table_name):
@@ -30,7 +30,6 @@ class Scripts(scripts.Script):
         if sql is None:
             return True
     
-        print("test hykes")
         for i in range(len(processed.images)):
 
             # Extract image information
@@ -40,7 +39,6 @@ class Scripts(scripts.Script):
             neg_prompt = processed.negative_prompt
             info = re.findall(regex, processed.info, re.M)[0]
             input_dict = dict(item.split(": ") for item in str(info).split(", "))
-            print(input_dict)
             
             steps = int(input_dict["Steps"])
             seed = int(input_dict["Seed"])
@@ -55,6 +53,7 @@ class Scripts(scripts.Script):
             image.save(buffer, "png")
             image_bytes = buffer.getvalue()
 
+            print("inset_db ..")
             sql.inset_db(table_name, {
                 "prompt": prompt, 
                 "negative_prompt": neg_prompt, 
@@ -67,4 +66,5 @@ class Scripts(scripts.Script):
                 "model": model, 
                 "image": image_bytes
             })
+            print("inset_db end ..")
         return True
